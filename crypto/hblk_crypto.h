@@ -51,6 +51,6 @@ uint8_t *ec_sign(EC_KEY const *key, uint8_t const *msg,
 		 size_t msglen, sig_t *sig);
 
 int ec_verify(EC_KEY const *key,
-	      uint8_t const *msg, size_t msglen, sig_t const *sig);
+		uint8_t const *msg, size_t msglen, sig_t const *sig);
 
-#endif 
+//endif
