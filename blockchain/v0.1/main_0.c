@@ -21,10 +21,10 @@ int main(void)
     block = llist_get_head(blockchain->chain);
 
     block = block_create(block, (int8_t *)"Holberton", 9);
-    llist_add_node(blockchain->chain, block, ADD_NODE_REAR);
+    llist_add_node(blockchain->chain, block, ADD_NODE_BACK);
 
     block = block_create(block, (int8_t *)"School", 6);
-    llist_add_node(blockchain->chain, block, ADD_NODE_REAR);
+    llist_add_node(blockchain->chain, block, ADD_NODE_BACK);
 
     _blockchain_print(blockchain);
     _blockchain_destroy(blockchain);
