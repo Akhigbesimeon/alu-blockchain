@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <llist.h>
+#include <llist.h>     
 #include "blockchain.h"
 
-void _blockchain_print(blockchain_t const *blockchain);
 void _blockchain_destroy(blockchain_t *blockchain);
 
 /**
@@ -15,18 +14,18 @@ void _blockchain_destroy(blockchain_t *blockchain);
 int main(void)
 {
     blockchain_t *blockchain;
-    block_t *block;
+    block_t *first, *block1, *block2;
 
     blockchain = blockchain_create();
-    block = llist_get_head(blockchain->chain);
+    first = llist_pop(blockchain->chain);
 
-    block = block_create(block, (int8_t *)"Holberton", 9);
-    llist_add_node(blockchain->chain, block, ADD_NODE_BACK);
+    block1 = block_create(first, (int8_t *)"Holberton", 9);
+    block2 = block_create(block1, (int8_t *)"School", 6);
 
-    block = block_create(block, (int8_t *)"School", 6);
-    llist_add_node(blockchain->chain, block, ADD_NODE_BACK);
+    block_destroy(first);
+    block_destroy(block1);
+    block_destroy(block2);
 
-    _blockchain_print(blockchain);
     _blockchain_destroy(blockchain);
 
     return (EXIT_SUCCESS);
