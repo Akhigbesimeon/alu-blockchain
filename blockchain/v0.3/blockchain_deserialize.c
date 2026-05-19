@@ -54,7 +54,7 @@ llist_t *deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
 {
 	block_t *block;
 	llist_t *list = llist_create(MT_SUPPORT_TRUE);
-	uint32_t i = 0;
+	uint32_t i = 0, j = 0, tx_size = 0;
 
 	if (!list)
 		return (NULL);
@@ -77,6 +77,31 @@ llist_t *deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
 		if (read(fd, block->hash, SHA256_DIGEST_LENGTH) !=
 		    SHA256_DIGEST_LENGTH)
 			return (CLEAN_UP_BLOCKS, NULL);
+
+		if (read(fd, &tx_size, 4) != 4)
+			return (CLEAN_UP_BLOCKS, NULL);
+		CHECK_ENDIAN(tx_size);
+		block->transactions = llist_create(MT_SUPPORT_TRUE);
+		if (!block->transactions)
+			return (CLEAN_UP_BLOCKS, NULL);
+		for (j = 0; j < tx_size; j++)
+		{
+			transaction_t *tx = calloc(1, sizeof(*tx));
+
+			if (!tx)
+				return (CLEAN_UP_BLOCKS, NULL);
+			if (read(fd, tx, sizeof(*tx)) != sizeof(*tx))
+			{
+				free(tx);
+				return (CLEAN_UP_BLOCKS, NULL);
+			}
+			if (llist_add_node(block->transactions, tx, ADD_NODE_REAR))
+			{
+				free(tx);
+				return (CLEAN_UP_BLOCKS, NULL);
+			}
+		}
+
 		if (llist_add_node(list, block, ADD_NODE_REAR))
 			return (CLEAN_UP_BLOCKS, NULL);
 	}
