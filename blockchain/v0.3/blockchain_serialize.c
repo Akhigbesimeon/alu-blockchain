@@ -8,7 +8,7 @@
  */
 int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 {
-	int fd, i, size;
+	int fd, i, size, tx_size, j;
 	uint8_t endianness = _get_endianness();
 
 	if (!blockchain || !blockchain->chain || !path)
@@ -40,6 +40,19 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 		if (write(fd, block->hash, SHA256_DIGEST_LENGTH) !=
 		    SHA256_DIGEST_LENGTH)
 			return (close(fd), -1);
+
+		tx_size = llist_size(block->transactions);
+		if (write(fd, &tx_size, 4) != 4)
+			return (close(fd), -1);
+		for (j = 0; j < tx_size; j++)
+		{
+			transaction_t *tx = llist_get_node_at(block->transactions, j);
+
+			if (!tx)
+				return (close(fd), -1);
+			if (write(fd, tx, sizeof(*tx)) != sizeof(*tx))
+				return (close(fd), -1);
+		}
 	}
 	return (close(fd), 0);
 }
