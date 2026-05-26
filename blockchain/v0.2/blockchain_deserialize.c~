@@ -13,13 +13,12 @@ llist_t *deserialize_blocks(int fd, uint32_t size, uint8_t endianness);
  * @path: path to serialized blockchain file
  * Return: pointer to deserialized blockchain or null
  */
-blockchain_t *
-blockchain_deserialize(char const *path)
+blockchain_t *blockchain_deserialize(char const *path)
 {
 	int fd;
 	blockchain_t *chain = NULL;
 	uint8_t endianness;
-	char buf[4096] = { 0 };
+	char buf[4096] = {0};
 	uint32_t size;
 
 	if (!path)
@@ -34,7 +33,7 @@ blockchain_deserialize(char const *path)
 	if (read(fd, buf, strlen(HBLK_VERSION)) != strlen(HBLK_VERSION) ||
 	    strcmp(buf, HBLK_VERSION))
 		return (CLEAN_UP, NULL);
-	chain = calloc(1, sizeof (*chain));
+	chain = calloc(1, sizeof(*chain));
 	if (!chain)
 		return (CLEAN_UP, NULL);
 	if (read(fd, &endianness, 1) != 1)
@@ -56,8 +55,7 @@ blockchain_deserialize(char const *path)
  * @endianness: if endianess needs switching
  * Return: pointer to list of blocks or NULL
  */
-llist_t *
-deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
+llist_t *deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
 {
 	block_t *block;
 	llist_t *list = llist_create(MT_SUPPORT_TRUE);
@@ -65,12 +63,12 @@ deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
 
 	if (!list)
 		return (NULL);
-	for (i = 0; i < size; i++) {
-		block = calloc(1, sizeof (*block));
+	for (i = 0; i < size; i++)
+	{
+		block = calloc(1, sizeof(*block));
 		if (!block)
 			return (CLEAN_UP_BLOCKS, NULL);
-		if (read(fd, &(block->info), sizeof (block->info)) !=
-		    sizeof (block->info))
+		if (read(fd, &(block->info), sizeof(block->info)) != sizeof(block->info))
 			return (CLEAN_UP_BLOCKS, NULL);
 		CHECK_ENDIAN(block->info.index);
 		CHECK_ENDIAN(block->info.difficulty);
@@ -79,8 +77,7 @@ deserialize_blocks(int fd, uint32_t size, uint8_t endianness)
 		if (read(fd, &(block->data.len), 4) != 4)
 			return (CLEAN_UP_BLOCKS, NULL);
 		CHECK_ENDIAN(block->data.len);
-		if (read(fd, block->data.buffer, block->data.len) !=
-		    block->data.len)
+		if (read(fd, block->data.buffer, block->data.len) != block->data.len)
 			return (CLEAN_UP_BLOCKS, NULL);
 		if (read(fd, block->hash, SHA256_DIGEST_LENGTH) !=
 		    SHA256_DIGEST_LENGTH)

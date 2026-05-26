@@ -7,14 +7,13 @@
  *
  * Return: a pointer to the created blockchain
  */
-blockchain_t *
-blockchain_create(void)
+blockchain_t *blockchain_create(void)
 {
 	blockchain_t *blockchain = NULL;
 	block_t *genesis_block = NULL;
 	llist_t *llist = NULL;
 
-	genesis_block = calloc(1, sizeof (*genesis_block));
+	genesis_block = calloc(1, sizeof(*genesis_block));
 	if (genesis_block == NULL)
 		return (NULL);
 
@@ -28,18 +27,21 @@ blockchain_create(void)
 	memcpy(genesis_block->hash, HASH, SHA256_DIGEST_LENGTH);
 
 	llist = llist_create(MT_SUPPORT_TRUE);
-	if (llist == NULL) {
+	if (llist == NULL)
+	{
 		free(genesis_block);
 		return (NULL);
 	}
 
-	if (llist_add_node(llist, genesis_block, ADD_NODE_FRONT) != 0) {
+	if (llist_add_node(llist, genesis_block, ADD_NODE_FRONT) != 0)
+	{
 		llist_destroy(llist, 1, NULL), free(genesis_block);
 		return (NULL);
 	}
 
-	blockchain = calloc(1, sizeof (*blockchain));
-	if (blockchain == NULL) {
+	blockchain = calloc(1, sizeof(*blockchain));
+	if (blockchain == NULL)
+	{
 		llist_destroy(llist, 1, NULL), free(genesis_block);
 		return (NULL);
 	}
