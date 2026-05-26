@@ -4,15 +4,15 @@
  * block_mine - mines a block with requisite difficulty
  * @block: pointer to block to mine
  */
-void
-block_mine(block_t *block)
+void block_mine(block_t *block)
 {
 	/* nonce is a 64-bit number that is typically used once */
 	uint64_t nonce = 0;
 	/* hash is a 256-bit number */
 	uint8_t hash[SHA256_DIGEST_LENGTH];
 
-	while (1) {
+	while (1)
+	{
 		/* Update the block's info with the new nonce */
 		block->info.nonce = nonce;
 		/* Compute the hash of the block */

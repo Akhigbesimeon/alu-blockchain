@@ -9,12 +9,13 @@
  *
  * Return: pointer to the allocated Block, or NULL upon failure
  */
-block_t *
-block_create(block_t const *prev, int8_t const *data, uint32_t data_len)
+block_t *block_create(block_t const *prev, int8_t const *data,
+
+		      uint32_t data_len)
 {
 	block_t *block;
 
-	block = calloc(1, sizeof (*block));
+	block = calloc(1, sizeof(*block));
 	if (block == NULL)
 		return (NULL);
 	block->info.index = prev->info.index + 1;

@@ -12,8 +12,9 @@ int block_serialize(llist_node_t node_ptr, int idx, void *arg);
  *
  * Return: 0 if successful, -1 if failed
  */
-int
-blockchain_serialize(blockchain_t const *blockchain, char const *path)
+int blockchain_serialize(blockchain_t const *blockchain,
+
+			 char const *path)
 {
 	FILE *file;
 	hblk_file_t file_header;
@@ -21,7 +22,7 @@ blockchain_serialize(blockchain_t const *blockchain, char const *path)
 	if (!blockchain || !path)
 		return (-1);
 
-	/*Set header values */
+	/*Set header values*/
 	memcpy(file_header.hblk_magic, HBLK_MAGIC, strlen(HBLK_MAGIC));
 	memcpy(file_header.hblk_version, HBLK_VERSION, strlen(HBLK_VERSION));
 	file_header.hblk_endian = _get_endianness();
@@ -34,9 +35,9 @@ blockchain_serialize(blockchain_t const *blockchain, char const *path)
 	if (!file)
 		return (-1);
 
-	fwrite(&file_header, sizeof (file_header), 1, file);
+	fwrite(&file_header, sizeof(file_header), 1, file);
 
-	llist_for_each(blockchain->chain, (node_func_t) block_serialize, file);
+	llist_for_each(blockchain->chain, (node_func_t)block_serialize, file);
 
 	fclose(file);
 	return (0);
@@ -49,21 +50,20 @@ blockchain_serialize(blockchain_t const *blockchain, char const *path)
  * @arg: file descriptor
  * Return: 0 if successful, -1 if failed
  */
-int
-block_serialize(llist_node_t node_ptr, int idx, void *arg)
+int block_serialize(llist_node_t node_ptr, int idx, void *arg)
 {
-	block_t *block = (block_t *) node_ptr;
-	FILE *file = (FILE *) arg;
+	block_t *block = (block_t *)node_ptr;
+	FILE *file = (FILE *)arg;
 
 	if (!block || !file)
 		return (-1);
 
-	/*unused var */
-	(void) idx;
+	/*unused var*/
+	(void)idx;
 
-	fwrite((void *) &block->info, sizeof (block->info), 1, file);
-	fwrite((void *) &block->data.len, sizeof (block->data.len), 1, file);
+	fwrite((void *)&block->info, sizeof(block->info), 1, file);
+	fwrite((void *)&block->data.len, sizeof(block->data.len), 1, file);
 	fwrite(block->data.buffer, block->data.len, 1, file);
-	fwrite(block->hash, sizeof (block->hash), 1, file);
-	return (sizeof (*block));
+	fwrite(block->hash, sizeof(block->hash), 1, file);
+	return (sizeof(*block));
 }
